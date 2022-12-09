@@ -19,12 +19,14 @@ import React, {
   import { AntDesign } from '@expo/vector-icons';
   import colors from '../cores';
 
-export default function Chat(){
+
+  export default function Chat(){
+
     const [messages, setMessages] = useState([]);
     const navigation = useNavigation();
 
-    const onSignOut = () => {
-        signOut(auth).catch(error => console.log(error));
+  const onSignOut = () => {
+      signOut(auth).catch(error => console.log('Erro ao sair: ', error));
     };
 
     useLayoutEffect(() => {
@@ -36,53 +38,60 @@ export default function Chat(){
               }}
               onPress={onSignOut}
             >
-              <AntDesign name="logout" size={24} color={colors.gray} style={{marginRight: 10}}/>
+              <AntDesign name="logout" size={32} color={colors.gray} style={{marginRight: 10}}/>
             </TouchableOpacity>
           )
         });
       }, [navigation]);
 
-      useLayoutEffect(() => {
-        const collectionRef = collection(database, 'chats');
-        const q = query(collectionRef, orderBy('createAdt', 'desc'));
+    useLayoutEffect(() => {
 
-        const unsubscribe = onSnapshot(q, snapshot => {
-            console.log('snapshot');
-            setMessages(
-                snapshot.docs.map(doc => ({
-                    _id: doc.id,
-                    createAt: doc.data().createAt,
-                    text: doc.data().text,
-                    user: doc.data().user
-                }))
-            )
-      });
-      return() => unsubscribe();
-    }, []);
+        const collectionRef = collection(database, 'chats');
+        const q = query(collectionRef, orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+        console.log('querySnapshot unsusbscribe');
+          setMessages(
+            querySnapshot.docs.map(doc => ({
+              _id: doc.data()._id,
+              createdAt: doc.data().createdAt.toDate(),
+              text: doc.data().text,
+              user: doc.data().user
+            }))
+          );
+        });
+    return unsubscribe;
+      }, []);
 
     const onSend = useCallback((messages = []) => {
-        setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-
-        const { _id, createAt, text, user } = messages[0];
+        setMessages(previousMessages =>
+          GiftedChat.append(previousMessages, messages)
+        );
+        const { _id, createdAt, text, user } = messages[0];    
         addDoc(collection(database, 'chats'), {
-            _id,
-            createAt,
-            text,
-            user,
+          _id,
+          createdAt,
+          text,
+          user
         });
-    }, []);
+      }, []);
 
-    return(
-        <GiftedChat 
-            messages={messages}
-            onSend={messages => onSend(messages)}
-            user={{
-                _id: auth?.currentUser?.email,
-                avatar: 'https://i.pravatar.cc/300'
-            }}
-            messagesContainerStyle={{
-                backgroundColor: '#fff'
-            }}
+      return (
+        <GiftedChat
+          messages={messages}
+          showAvatarForEveryMessage={false}
+          showUserAvatar={false}
+          onSend={messages => onSend(messages)}
+          messagesContainerStyle={{
+            backgroundColor: '#1e1e1e'
+          }}
+          textInputStyle={{
+            backgroundColor: '#fff',
+            borderRadius: 20,
+          }}
+          user={{
+            _id: auth?.currentUser?.email,
+          }}
         />
-    )
+      );
 }

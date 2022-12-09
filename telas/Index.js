@@ -4,38 +4,30 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '../cores';
 import { Entypo } from '@expo/vector-icons';
-const chat = "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
+const logo = require('../assets/logo.png');
+const container = require('../assets/component.png')
+const widget = require('../assets/widget.png')
 
 const Home = () => {
 
     const navigation = useNavigation();
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <FontAwesome name="search" size={24} color={colors.gray} style={{marginLeft: 15}}/>
-            ),
-            headerRight: () => (
-                <Image
-                    source={{ uri: chat }}
-                    style={{
-                        width: 40,
-                        height: 40,
-                        marginRight: 15,
-                    }}
-                />
-            ),
-        });
-    }, [navigation]);
-
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("Chat")}
-                style={styles.chatButton}
-            >
-                <Entypo name="chat" size={24} color={colors.lightGray} />
-            </TouchableOpacity>
+            <Image source={logo} style={styles.logo} />
+            <Text style={styles.title}>Gym App - GYM CHAT</Text>
+            <Text style={styles.p}>Converse com o seu professor agora mesmo!</Text>
+            <Text style={styles.p}>Dúvidas de treino? Contate-nos agora!</Text>
+            <Image source={container} style={styles.imagecontainer} />
+            <Image source={widget} style={styles.imagecontainer} />
+            <View style={styles.container}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("Chat")}
+                    style={styles.chatButton}
+                >
+                    <Entypo name="chat" size={30} color={colors.lightGray} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
     };
@@ -47,7 +39,31 @@ const Home = () => {
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'flex-end',
-            backgroundColor: "#fff",
+            backgroundColor: "#1e1e1e",
+        },
+        logo: {
+            alignSelf: "center", 
+            marginTop: 24,
+        },
+        imagecontainer: {
+            alignSelf: "center", 
+            marginTop: 20,
+        },
+        title: {
+            fontSize: 36,
+            fontWeight: 'bold',
+            color: "#24FF00",
+            alignSelf: "center",
+            paddingBottom: 24,
+            paddingTop: 30,
+          },
+        p: {
+            fontSize: 15,
+            fontWeight: 'regular',
+            color: "#fff",
+            alignSelf: "center",
+            paddingBottom: 5,
+            paddingTop: 10, 
         },
         chatButton: {
             backgroundColor: colors.primary,
@@ -66,4 +82,4 @@ const Home = () => {
             marginRight: 20,
             marginBottom: 50,
         }
-});
+    });

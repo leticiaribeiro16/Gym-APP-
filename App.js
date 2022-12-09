@@ -1,49 +1,49 @@
-import React, { useEffect } from 'react'
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {View,ActivityIndicator} from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { onAuthStateChanged } from 'firebase/auth';
-
-//telas
-import Index from './telas/Index'
-import Chat from './telas/Chat'
-import Login from './telas/Signin'
-import Signup from './telas/Signup'
+import { auth } from './config/firebase';
+import Login from './telas/Signin';
+import Signup from './telas/Signup';
+import Chat from './telas/Chat';
+import Home from './telas/Index'
 
 const Stack = createStackNavigator();
 const AuthenticatedUserContext = createContext({});
 
 const AuthenticatedUserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  return(
-    <AuthenticatedUserContext.Provider value={{user, setUser}}>
+return (
+    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
       {children}
     </AuthenticatedUserContext.Provider>
-  )
-}
+  );
+};
 
-function GymChat(){
-  return(
-    <Stack.Navigator defaultScreenOptions={Index}>
-      <Stack.Screen name="Index" component={Index} />
-      <Stack.Screen name="Chat" component={Chat} />
-    </Stack.Navigator>
-  )
-}
-
-function AuthStack(){
+function ChatStack() {
   return (
-  <Stack.Navigator defaultScreenOptions={Login} screenOptions={{ headerShown: false }}>
-    <Stack.Screen name='Login' component={Login} />
-    <Stack.Screen name='Signup' component={Signup} />
-  </Stack.Navigator>
-  )
+    <Stack.Navigator defaultScreenOptions={Home}>
+      <Stack.Screen name='Home' component={Home} />
+      <Stack.Screen name='Chat' component={Chat} />
+    </Stack.Navigator>
+  );
+}
+
+function AuthStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='Login' component={Login} />
+      <Stack.Screen name='Signup' component={Signup} />
+    </Stack.Navigator>
+  );
 }
 
 function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
 useEffect(() => {
+    // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuth = onAuthStateChanged(
       auth,
       async authenticatedUser => {
@@ -51,7 +51,8 @@ useEffect(() => {
         setIsLoading(false);
       }
     );
-    return() => unsubscribe();
+// unsubscribe auth listener on unmount
+    return unsubscribeAuth;
   }, [user]);
 if (isLoading) {
     return (
@@ -61,10 +62,9 @@ if (isLoading) {
     );
   }
 
-
-  return (
+return (
     <NavigationContainer>
-      {user ? <GymChat /> : <AuthStack />}
+      {user ? <ChatStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

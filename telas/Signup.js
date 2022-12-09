@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, Touchab
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 const background = require("../assets/background.png");
+const logo = require('../assets/logo.png');
 
 export default function Signup({ navigation }) {
 
@@ -13,7 +14,7 @@ const onHandleSignup = () => {
     if (email !== '' && password !== '') {
   createUserWithEmailAndPassword(auth, email, password)
         .then(() => console.log('Cadastrado com sucesso'))
-        .catch((err) => Alert.alert("Houve um problema", err.message));
+        .catch((err) => Alert.alert("Ocorreu um erro", err.message));
     }
   };
   
@@ -22,36 +23,37 @@ const onHandleSignup = () => {
       <Image source={background} style={styles.background} />
       <View style={styles.graySheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>Cadastro</Text>
+        <Text style={styles.title}>CADASTRAR</Text>
          <TextInput
-            style={styles.input}
-            placeholder="Coloque seu e-mail"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+        style={styles.input}
+        placeholder="E-mail"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
       />
       <TextInput
-            style={styles.input}
-            placeholder="Coloque sua senha"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            textContentType="password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
+        style={styles.input}
+        placeholder="Senha"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        value={password}
+        onChangeText={(text) => setPassword(text)}
       />
       <TouchableOpacity style={styles.button} onPress={onHandleSignup}>
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Cadastrar</Text>
+        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}>C A D A S T R A R</Text>
       </TouchableOpacity>
       <View style={{marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
         <Text style={{color: 'gray', fontWeight: '600', fontSize: 14}}>Já tem uma conta? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={{color: '#24FF00', fontWeight: '600', fontSize: 14}}> Entrar</Text>
+          <Text style={{color: '#24FF00', fontWeight: '600', fontSize: 14}}> Entre aqui</Text>
         </TouchableOpacity>
       </View>
+      <Image source={logo} style={styles.logo} />
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
@@ -84,12 +86,16 @@ const styles = StyleSheet.create({
     top: 0,
     resizeMode: 'cover',
   },
+  logo: {
+    alignSelf: "center", 
+    marginTop: 24,
+  },
   graySheet: {
     width: '100%',
     height: '75%',
     position: "absolute",
     bottom: 0,
-    backgroundColor: '#101010',
+    backgroundColor: '#1e1e1e',
     borderTopLeftRadius: 60,
   },
   form: {
