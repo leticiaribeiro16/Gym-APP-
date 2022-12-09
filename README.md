@@ -14,7 +14,9 @@
       </ul>
 </h4>
 
-# 📁 Acesso ao projeto
+# 📁 Modelo Conceitual do Projeto
+
+![image](https://user-images.githubusercontent.com/103691985/206782559-ffc83939-b03d-4782-b58a-8f66966eca16.png)
 
 # 🛠️ Abrir e rodar o projeto
 
